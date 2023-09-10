@@ -82,7 +82,7 @@ class GameState():
                 
             winner_text = ""
         
-            if red_health <= 0:
+            if red_health <=  0:
                 winner_text = "YELLOW WINS"
             
             if yellow_health <= 0:
