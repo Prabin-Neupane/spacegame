@@ -18,10 +18,17 @@ BLACK = (0,0,0)
 RED = (255,0,0)
 YELLOW = (255,255,0)
 WHITE = (255,255,255)
+PLAY_RECT = pygame.Rect(400, 300, 100, 40)
+QUIT_RECT = pygame.Rect(400, 500, 100, 40)
+
  
 HEALTH_FONT = pygame.font.SysFont('comicsans', 20)
 WINNER_FONT  = pygame.font.SysFont('comicsans', 50)
-TEXT_FONT = pygame.font.SysFont('comicsans', 25)
+TEXT_FONT = pygame.font.SysFont('comicsans', 40)
+PLAY_QUIT_FONT = pygame.font.SysFont('comicsans', 25)
+
+play_button_text = PLAY_QUIT_FONT.render('PLAY', 1, BLACK)
+quit_button_text = PLAY_QUIT_FONT.render('QUIT', 1, BLACK)
 
 YELLOW_HIT = pygame.USEREVENT + 1  #number
 RED_HIT = pygame.USEREVENT + 2      #number
@@ -110,10 +117,32 @@ class GameState():
         # pygame.display.update()
         run = True
         clock = pygame.time.Clock()
+        
         while run:
             
             clock.tick(FPS)
+            mouse = pygame.mouse.get_pos()
             
+            if PLAY_RECT.collidepoint(mouse[0], mouse[1]):
+                pygame.draw.rect(WIN, YELLOW, PLAY_RECT)
+                WIN.blit(play_button_text, PLAY_RECT)
+                pygame.display.update()
+                    
+            if not PLAY_RECT.collidepoint(mouse[0], mouse[1]):
+                pygame.draw.rect(WIN, WHITE, PLAY_RECT)
+                WIN.blit(play_button_text, PLAY_RECT)
+                pygame.display.update()
+            
+            if QUIT_RECT.collidepoint(mouse[0], mouse[1]):
+                pygame.draw.rect(WIN, YELLOW, QUIT_RECT)
+                WIN.blit(quit_button_text, QUIT_RECT)
+                pygame.display.update()
+            
+            if not QUIT_RECT.collidepoint(mouse[0], mouse[1]):
+                pygame.draw.rect(WIN, WHITE, QUIT_RECT)
+                WIN.blit(quit_button_text, QUIT_RECT)
+                pygame.display.update()
+        
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
@@ -123,12 +152,16 @@ class GameState():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     
                     
-                    if event.button == 1 :
                         
+                    if (event.button == 1) and 400 <= mouse[0] <= 500 and 300 <= mouse[1] <= 340 :
+                        
+                        
+                        # pygame.draw.rect(WIN, YELLOW, pygame.Rect(400, 300, 100, 40))
                         # draw_winner("Ready to Play")
                         # pygame.time.delay(100)
                         
                         WIN.fill(BLACK)
+                        
                         
                         draw_winner('3')
                         pygame.time.delay(100)
@@ -146,7 +179,7 @@ class GameState():
                         
                         self.main_game()
                     
-                    if event.button == 3:
+                    if (event.button == 1) and 400 <= mouse[0] <= 500 and 500 <= mouse[1] <= 540:
                         run = False
     
 
@@ -227,22 +260,33 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
 def draw_winner(text):
     
     draw_text = WINNER_FONT.render(text, 1, WHITE)
-    WIN.blit(draw_text,(WIDTH//2 - 100 ,HEIGHT//2))
+    WIN.blit(draw_text,(WIDTH//2 ,HEIGHT//2))
+    
     pygame.display.update()
     pygame.time.delay(300)
     
     
 def draw_ahead(text):
     draw_text = TEXT_FONT.render(text, 1, WHITE)
-    WIN.blit(draw_text, (0,HEIGHT//2))
+    # play_button_text = TEXT_FONT.render('PLAY', 1, BLACK)
+    # quit_button_text = TEXT_FONT.render('QUIT', 1, BLACK)
+    
+    WIN.blit(SPACE, (0,0))
+    pygame.draw.rect(WIN, WHITE, PLAY_RECT)
+    pygame.draw.rect(WIN, WHITE, QUIT_RECT)
+    WIN.blit(draw_text, (80,HEIGHT//2-250))
+    # WIN.blit(play_button_text, (600,300))
+    # WIN.blit(quit_button_text, (600,500))
+    
     pygame.display.update()
     pygame.time.delay(200)
+    
     
 def main():
     game_state = GameState()
     game_state.state_manager()
         
 if __name__ == "__main__":
-    draw_ahead("Ready to go ? If yes ( left click ) your mouse Else ( right click ) your mouse")
+    draw_ahead("Ready to go ? If yes left click any button")
     
     main()
